@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     git \
     curl \
+    libboost-dev \
     libx11-6 \
     sudo \
  && rm -rf /var/lib/apt/lists/*
@@ -43,3 +44,11 @@ RUN conda install -y -c pytorch \
     "pytorch=0.4.1=py36_cuda9.2.148_cudnn7.1.4_1" \
     "torchvision=0.2.1=py36_1" \
  && conda clean -ya
+
+# Build M3D-RPN source
+COPY --chown=user:user lib /work/lib
+COPY --chown=user:user data /work/data
+RUN cd /work/lib/nms && make
+RUN cd /work \
+ && sh data/kitti_split1/devkit/cpp/build.sh \
+ && sh data/kitti_split2/devkit/cpp/build.sh
