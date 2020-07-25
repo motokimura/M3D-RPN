@@ -1,0 +1,6 @@
+easydict==1.9
+opencv-python==3.1.0.5
+shapely==1.6.4
+#torch==0.4.1  # installed in Dockerfile
+#torchvision==0.2.1  # installaed in Dockerfile
+visdom==0.1.8.5

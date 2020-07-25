@@ -10,7 +10,11 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     libboost-dev \
+    libgl1-mesa-dev \
+    libsm6 \
     libx11-6 \
+    libxext-dev \
+    libxrender1 \
     sudo \
  && rm -rf /var/lib/apt/lists/*
 
@@ -18,19 +22,9 @@ RUN apt-get update && apt-get install -y \
 RUN mkdir /work
 WORKDIR /work
 
-# Create a non-root user and switch to it
-RUN adduser --disabled-password --gecos '' --shell /bin/bash user \
- && chown -R user:user /work
-RUN echo "user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-user
-USER user
-
-# All users can use /home/user as their home directory
-ENV HOME=/home/user
-RUN chmod 777 /home/user
-
 # Install Miniconda and Python 3.6
 ENV CONDA_AUTO_UPDATE_CONDA=false
-ENV PATH=/home/user/miniconda/bin:$PATH
+ENV PATH=/root/miniconda/bin:$PATH
 RUN curl -sLo ~/miniconda.sh https://repo.continuum.io/archive/Anaconda3-5.2.0-Linux-x86_64.sh \
  && chmod +x ~/miniconda.sh \
  && ~/miniconda.sh -b -p ~/miniconda \
@@ -45,10 +39,29 @@ RUN conda install -y -c pytorch \
     "torchvision=0.2.1=py36_1" \
  && conda clean -ya
 
-# Build M3D-RPN source
-COPY --chown=user:user lib /work/lib
-COPY --chown=user:user data /work/data
+# Install Python modules
+COPY docker/requirements.txt /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
+
+# Build NMS
+COPY lib /work/lib
 RUN cd /work/lib/nms && make
-RUN cd /work \
- && sh data/kitti_split1/devkit/cpp/build.sh \
- && sh data/kitti_split2/devkit/cpp/build.sh
+
+# Build KITTI devkit for kitti_split1
+# TODO: check if this is necessary or not
+RUN mkdir -p /work/data/kitti_split1
+COPY data/kitti_split1/devkit /work/data/kitti_split1/devkit
+COPY data/kitti_split1/setup_split.py /work/data/kitti_split1/setup_split.py
+COPY data/kitti_split1/test.txt /work/data/kitti_split1/test.txt
+COPY data/kitti_split1/train.txt /work/data/kitti_split1/train.txt
+COPY data/kitti_split1/trainval.txt /work/data/kitti_split1/trainval.txt
+COPY data/kitti_split1/val.txt /work/data/kitti_split1/val.txt
+RUN cd /work && sh data/kitti_split1/devkit/cpp/build.sh
+
+# Build KITTI devkit for kitti_split_2
+# TODO: check if this is necessary or not
+RUN mkdir -p /work/data/kitti_split2
+COPY data/kitti_split2/devkit /work/data/kitti_split2/devkit
+COPY data/kitti_split2/kitti_ids_new.mat /work/data/kitti_split2/kitti_ids_new.mat
+COPY data/kitti_split2/setup_split.py /work/data/kitti_split2/setup_split.py
+RUN cd /work && sh data/kitti_split2/devkit/cpp/build.sh
