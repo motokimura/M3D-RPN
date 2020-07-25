@@ -1,5 +1,4 @@
 *
-!lib
 !data/kitti_split1/devkit
 !data/kitti_split1/setup_split.py
 !data/kitti_split1/test.txt
@@ -10,3 +9,6 @@
 !data/kitti_split2/kitti_ids_new.mat
 !data/kitti_split2/setup_split.py
 !docker/requirements.txt
+!lib
+!models
+!scripts

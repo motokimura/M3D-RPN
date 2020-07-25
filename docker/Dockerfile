@@ -43,25 +43,19 @@ RUN conda install -y -c pytorch \
 COPY docker/requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
-# Build NMS
+# Copy data/ and build KITTI devkit
+RUN mkdir /work/data
+COPY data/kitti_split1 /work/data/kitti_split1
+COPY data/kitti_split2 /work/data/kitti_split2
+RUN cd /work && sh data/kitti_split1/devkit/cpp/build.sh
+RUN cd /work && sh data/kitti_split2/devkit/cpp/build.sh
+
+# Copy lib/ and build NMS
 COPY lib /work/lib
 RUN cd /work/lib/nms && make
 
-# Build KITTI devkit for kitti_split1
-# TODO: check if this is necessary or not
-RUN mkdir -p /work/data/kitti_split1
-COPY data/kitti_split1/devkit /work/data/kitti_split1/devkit
-COPY data/kitti_split1/setup_split.py /work/data/kitti_split1/setup_split.py
-COPY data/kitti_split1/test.txt /work/data/kitti_split1/test.txt
-COPY data/kitti_split1/train.txt /work/data/kitti_split1/train.txt
-COPY data/kitti_split1/trainval.txt /work/data/kitti_split1/trainval.txt
-COPY data/kitti_split1/val.txt /work/data/kitti_split1/val.txt
-RUN cd /work && sh data/kitti_split1/devkit/cpp/build.sh
+# Copy models/
+COPY models /work/models
 
-# Build KITTI devkit for kitti_split_2
-# TODO: check if this is necessary or not
-RUN mkdir -p /work/data/kitti_split2
-COPY data/kitti_split2/devkit /work/data/kitti_split2/devkit
-COPY data/kitti_split2/kitti_ids_new.mat /work/data/kitti_split2/kitti_ids_new.mat
-COPY data/kitti_split2/setup_split.py /work/data/kitti_split2/setup_split.py
-RUN cd /work && sh data/kitti_split2/devkit/cpp/build.sh
+# Copy scripts/
+COPY scripts /work/scripts
