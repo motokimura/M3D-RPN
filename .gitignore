@@ -4,8 +4,7 @@
 /data/kitti_split2/training
 /data/kitti_split2/validation
 /output
-/M3D-RPN-Release
-/M3D-RPN-Release.zip
+/weights
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,virtualenv,jupyternotebooks,visualstudiocode,macos,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,virtualenv,jupyternotebooks,visualstudiocode,macos,linux

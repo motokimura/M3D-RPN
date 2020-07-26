@@ -18,15 +18,43 @@ np.set_printoptions(suppress=True)
 # -----------------------------------------
 from lib.imdb_util import *
 
-conf_path = 'M3D-RPN-Release/m3d_rpn_depth_aware_test_config.pkl'
-weights_path = 'M3D-RPN-Release/m3d_rpn_depth_aware_test'
+
+def parse_args(argv):
+    from getopt import getopt
+    opts, args = getopt(argv, '', ['config=', 'weight=', 'outdir='])
+    # defaults (trainval split #1)
+    conf_path = 'weights/M3D-RPN-Release/m3d_rpn_depth_aware_val1_config.pkl'
+    weights_path = 'weights/M3D-RPN-Release/m3d_rpn_depth_aware_val1'
+    outdir = None
+    # read opts
+    for opt, arg in opts:
+        if opt in ('--config'):
+            conf_path = arg
+        if opt in ('--weight'):
+            weights_path = arg
+        if opt in ('--outdir'):
+            outdir = arg
+
+    if outdir is None:
+        # if --outdir option is not used, give the weight file name to output directory
+        outdir = os.path.basename(weights_path)
+
+    return conf_path, weights_path, outdir
+
+
+conf_path, weights_path, outdir = parse_args(sys.argv[1:])
+print()
+print('CONFIG: {}'.format(conf_path))
+print('WEIGHT: {}'.format(weights_path))
+print('OUTDIR: {}'.format(outdir))
+print()
 
 # load config
 conf = edict(pickle_read(conf_path))
 conf.pretrained = None
 
 data_path = os.path.join(os.getcwd(), 'data')
-results_path = os.path.join('output', 'tmp_results', 'data')
+results_path = os.path.join('output', outdir, 'data')
 
 # make directory
 mkdir_if_missing(results_path, delete_if_exist=True)

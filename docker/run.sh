@@ -9,8 +9,8 @@ PROJ_DIR=`dirname ${THIS_DIR}`
 # Directory containing the input KITTI object3d data
 KITTI_DIR=${PROJ_DIR}/data/kitti
 
-# Directory containing the pretrained weight and config (necessary to run testing)
-WEIGHT_DIR=${PROJ_DIR}/M3D-RPN-Release
+# Directory containing the pretrained weight and config files
+WEIGHT_DIR=${PROJ_DIR}/weights
 
 # Directory to which training/testing results will be saved
 OUT_DIR=${PROJ_DIR}/output
@@ -18,7 +18,7 @@ mkdir -p -m 777 ${OUT_DIR}
 
 nvidia-docker run --rm -it --ipc=host \
     -v ${KITTI_DIR}:/work/data/kitti \
-    -v ${WEIGHT_DIR}:/work/M3D-RPN-Release \
+    -v ${WEIGHT_DIR}:/work/weights \
     -v ${OUT_DIR}:/work/output \
     -p 8100:8100 \
     --name m3d_rpn \
