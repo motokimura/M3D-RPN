@@ -160,4 +160,5 @@ The training config, trained weights, etc. are saved under `M3D-RPN/data/output`
 You can configure hyper parameters (e.g., trainval split) by changing
 `M3D-RPN/scripts/config/kitti_3d_multi_warmup.py` and `M3D-RPN/scripts/config/kitti_3d_multi_main.py`.
 
-Notice: if you want to change the hyperparameters, you have to change the files **before** executing `build.sh`.
+Notice: if you changed the files, you have to re-build and re-launch the container
+to reflect the changes.
