@@ -5,35 +5,35 @@
 Tested with:
 
 ```
-- Ubuntu 18.04 LTS
-- nvidia-driver==450.51.05
-- docker==19.03.12
-- nvidia-driver==2.4.0
+- OS: Ubuntu 18.04 LTS
+- NVIDIA Driver: 450.51.05
+- Docker: 19.03.12
+- NVIDIA Docker 2: 2.4.0
 ```
 
 ## Setup
 
-### nvidia-driver
+- **NVIDIA Driver**
 
-Install nvidia-driver appropriate to your NVIDIA GPU.
+    Find an appropriate version from [here](https://www.nvidia.com/Download/index.aspx) and install it.
 
-### docker/nvidia-docker2
+- **Docker & NVIDIA Docker 2**
 
-Install [docker](https://docs.docker.com/engine/install/ubuntu/)
-and [nvidia-docker2](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0)).
+    Install [Docker](https://docs.docker.com/engine/install/ubuntu/)
+and [NVIDIA Docker 2](https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0)).
 
-### KITTI
+- **KITTI**
 
-Download the full [KITTI](http://www.cvlibs.net/datasets/kitti/eval_object.php?obj_benchmark=3d) detection dataset and extract them.
+    Download [KITTI 3D Object Detection](http://www.cvlibs.net/datasets/kitti/eval_object.php?obj_benchmark=3d) dataset and extract them.
 
-Default path is set to `M3D-RPN/data/kitti`.
+    Default path is set to `M3D-RPN/data/kitti`.
 
-### Pretrained weights
+- **Pretrained weights**
 
-Download a zip file by following [the original README](https://github.com/garrickbrazil/M3D-RPN#testing)
+    Download a zip file by following [the original README](https://github.com/garrickbrazil/M3D-RPN#testing)
 and extract it.
 
-Default path is set to `M3D-RPN/data/M3D-RPN-Release`.
+    Default path is set to `M3D-RPN/data/M3D-RPN-Release`.
 
 ## Testing
 
@@ -49,7 +49,7 @@ Run container:
 ./docker/run.sh
 ```
 
-NOTICE: if your KITTI data or pretrained weights are not located in the default paths written above,
+Notice: if your KITTI data or pretrained weights are not located in the default paths written above,
 you need to update `KITTI_DIR` and `WEIGHT_DIR` defined in `run.sh`.
 
 Now you should be in the container, and can apply trainval spliting by:
@@ -59,7 +59,7 @@ Now you should be in the container, and can apply trainval spliting by:
 (in container) python data/kitti_split2/setup_split.py
 ```
 
-Finally you can start testing:
+Start testing:
 
 ```
 (in container) python scripts/test_rpn_3d.py
@@ -82,7 +82,7 @@ Run container:
 ./docker/run.sh
 ```
 
-NOTICE: if your KITTI data or pretrained weights are not located in the default paths written above,
+Notice: if your KITTI data or pretrained weights are not located in the default paths written above,
 you need to update `KITTI_DIR` and `WEIGHT_DIR` defined in `run.sh`.
 
 Now you should be in the container, and can apply trainval spliting by:
@@ -98,7 +98,8 @@ Before training, launch visdom server:
 (in container) python -m visdom.server -port 8100 -readonly
 ```
 
-Launch **a new terminal (session)** and run a new process in the container:
+Launch **a new terminal**.
+Then, start a new bash session in the container:
 
 ```
 ./docker/exec.sh
